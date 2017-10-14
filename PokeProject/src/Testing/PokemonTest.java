@@ -38,7 +38,6 @@ public class PokemonTest {
 		blissey = new Pokemon(331, 13, 68, 95, 187, 75, new Normal(), new NullType());
 		gardevoir = new Pokemon(145, 81, 86, 214, 155, 167, new Psychic(), new Fairy());
 		gengarA = new Pokemon(136, 63, 80, 182, 95, 178, new Ghost(), new Poison());
-		gengarB = gengarA.clonePokemon();
 		Status flinch = new StatusMove(0, 0, 0, 0, 0, 0, true, true);
 		dragonDance = new PhysicalDamage(new NullType(), 0, 0, new StatusMove(0, 1, 0, 0, 0, 1, false, false));
 		dragonite.addMove(dragonDance);
@@ -61,15 +60,11 @@ public class PokemonTest {
 		gengarA.addMove(new SpecialDamage(new Poison(), 95, 0, new NullStatus()));
 		gengarA.addMove(new SpecialDamage(new Fighting(), 120, 0, new NullStatus()));
 		gengarA.addMove(new PhysicalDamage(new Normal(), 0, 4, flinch));
-		gengarB.addMove(new SpecialDamage(new Ghost(), 80, 0, new NullStatus()));
-		gengarB.addMove(new SpecialDamage(new Poison(), 95, 0, new NullStatus()));
-		gengarB.addMove(new SpecialDamage(new Fighting(), 120, 0, new NullStatus()));
-		gengarA.addMove(new PhysicalDamage(new Normal(), 0, 4, flinch));
 		dragonite.addAbility(new Multiscale());
 		lopunny.addAbility(new Scrappy());
 		gardevoir.addAbility(new Pixilate());
 		gengarA.addAbility(new Levitate());
-		gengarB.addAbility(new Levitate());
+		gengarB = gengarA.clonePokemon();
 		playerA.addPokemon(dragonite);
 		playerA.addPokemon(blissey);
 		playerA.addPokemon(gengarA);

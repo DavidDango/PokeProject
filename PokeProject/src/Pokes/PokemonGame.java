@@ -3,8 +3,8 @@ package Pokes;
 public class PokemonGame {
 	private Pokemon activeA;
 	private Pokemon activeB;
-	private int[] avaibleA;
-	private int[] avaibleB;
+	private int[] availableA;
+	private int[] availableB;
 	private Player playerA;
 	private Player playerB;
 	private int currentA;
@@ -18,13 +18,13 @@ public class PokemonGame {
 		playerB = player2;
 		activeA = playerA.getPokemon(0);
 		activeB = playerB.getPokemon(0);
-		avaibleA = new int[playerA.avaiblePokemon()];
-		avaibleB = new int[playerB.avaiblePokemon()];
+		availableA = new int[playerA.avaiblePokemon()];
+		availableB = new int[playerB.avaiblePokemon()];
 		for(int i = 0; i < playerA.avaiblePokemon(); i++) {
-			avaibleA[i] = 1;
+			availableA[i] = 1;
 		}
 		for(int i = 0; i < playerB.avaiblePokemon(); i++) {
-			avaibleB[i] = 1;
+			availableB[i] = 1;
 		}
 		pokemonTurn = true;
 		turnCounterA = 1;
@@ -40,11 +40,11 @@ public class PokemonGame {
 	}
 
 	public int[] avaibleA() {
-		return avaibleA;
+		return availableA;
 	}
 	
 	public int[] avaibleB() {
-		return avaibleB;
+		return availableB;
 	}
 
 	public void playerASwitch(int i) {
@@ -75,7 +75,7 @@ public class PokemonGame {
 		activeB.receiveDamage((int) (damage*stab*extra));
 		activeA.apply(activeA.getMove(i).getStatus());
 		if(!activeB.canFight()) {
-			avaibleB[currentB] = 0;
+			availableB[currentB] = 0;
 			playerB.lost1();
 		}
 	}
@@ -90,7 +90,7 @@ public class PokemonGame {
 		activeA.receiveDamage((int) (damage*stab*extra));
 		activeB.apply(activeB.getMove(i).getStatus());
 		if(!activeA.canFight()) {
-			avaibleA[currentA] = 0;
+			availableA[currentA] = 0;
 			playerA.lost1();
 		}
 	}
@@ -143,5 +143,50 @@ public class PokemonGame {
 			pokemonTurn = !pokemonTurn;
 		}
 	}
+	
+	public void manuallyAdvanceTurnA() {
+		turnCounterA++;
+		pokemonTurn = !pokemonTurn;
+	}
+	
+	public void manuallyAdvanceTurnB() {
+		turnCounterB++;
+		pokemonTurn = !pokemonTurn;
+	}
+
+	public int getTurnA() {
+		return turnCounterA;
+	}
+
+	public int getTurnB() {
+		return turnCounterB;
+	}
+
+	public void killA(int i) {
+		if(availableA[i] > 0) {
+			playerASwitch(i);
+			currentA = i;
+			activeA.receiveDamage(activeA.getRemainingHealth());
+			availableA[i] = 0;
+		}
+	}
+	
+	public void killB(int i) {
+		if(availableB[i] > 0) {
+			playerASwitch(i);
+			currentB = i;
+			activeB.receiveDamage(activeB.getRemainingHealth());
+			availableB[i] = 0;
+		}
+	}
+
+	public int fightingPokemonA() {
+		return currentA;
+	}
+
+	public int fightingPokemonB() {
+		return currentB;
+	}
+	
 	
 }

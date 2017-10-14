@@ -42,6 +42,22 @@ public class Pokemon {
 		modifiers = new int[] {0, 0, 0, 0, 0};
 	}
 
+	public Pokemon(int healthValue, int attackValue, int defenseValue, int specialAttackValue, int specialDefenseValue, int speedValue, Types t1, Types t2, Ability pAbility, Move[] pMoves) {
+		health = healthValue;
+		attack = attackValue;
+		defense = defenseValue;
+		specialAttack = specialAttackValue;
+		specialDefense = specialDefenseValue;
+		speed = speedValue;
+		type1 = t1;
+		type2 = t2;
+		damageTaken = 0;
+		ability = pAbility;
+		moves = pMoves;
+		currentMoves = 4;
+		modifiers = new int[] {0, 0, 0, 0, 0};
+	}
+
 	public void addMove(Move m) {
 		if(currentMoves < 4){
 			moves[currentMoves] = m;
@@ -129,7 +145,7 @@ public class Pokemon {
 	}
 
 	public Pokemon clonePokemon() {
-		return new Pokemon(health, attack, defense, specialAttack, specialDefense, speed, type1, type2);
+		return new Pokemon(health, attack, defense, specialAttack, specialDefense, speed, type1, type2, ability, moves);
 	}
 
 	public boolean isGhost() {
