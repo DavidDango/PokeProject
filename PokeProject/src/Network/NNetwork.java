@@ -24,12 +24,12 @@ public class NNetwork {
 		NLayer l = new NLayer();
 		if(random){
 			for(int i = 0; i < neurons; i++){
-				l.add(new Neuron(e.makeRandomArray(in, 0, 5), e.getRandom(0, 5), 0.1));
+				l.add(new Neuron(e.makeRandomArray(in, 0, 5), e.getRandom(0, 5), 0.02));
 			}
 		}
 		else{
 			for(int i = 0; i < neurons; i++){
-				l.add(new Neuron(e.makeArray(in, 0), 0, 0.1));
+				l.add(new Neuron(e.makeArray(in, 0), 0, 0.02));
 			}
 		}
 		inputs = in;
@@ -42,7 +42,7 @@ public class NNetwork {
 		this.e = e;
 		NLayer l = new NLayer();
 		for(int i = 0; i < neurons; i++){
-			l.add(new Neuron(e.makeRandomArray(in, 0, 5), e.getRandom(0, 5), 0.1));
+			l.add(new Neuron(e.makeRandomArray(in, 0, 5), e.getRandom(0, 5), 0.02));
 		}
 		inputs = in;
 		outputs = neurons;
@@ -127,11 +127,11 @@ public class NNetwork {
 	public void addRandom(int neurons, boolean sameLayer){
 		if(sameLayer){
 			for(int i = 0; i < neurons; i++){
-				this.add(new Neuron(e.makeRandomArray(layers.get(layers.size() - 1).getInputs(), 0, 5), e.getRandom(0, 5), 0.1), sameLayer);
+				this.add(new Neuron(e.makeRandomArray(layers.get(layers.size() - 1).getInputs(), 0, 5), e.getRandom(0, 5), 0.02), sameLayer);
 			}
 		}
 		else {
-			this.add(new Neuron(e.makeRandomArray(outputs, 0, 5), e.getRandom(0, 5), 0.1), sameLayer);
+			this.add(new Neuron(e.makeRandomArray(outputs, 0, 5), e.getRandom(0, 5), 0.02), sameLayer);
 			this.addRandom(neurons - 1, true);
 		}
 	}

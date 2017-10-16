@@ -25,35 +25,35 @@ public class NetworkComunication {
 		Random generator = new Random(549);
 		setUpInterface();
 		setUpNetworks(generator);
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(0, 100, generator);
 		}
 		System.out.println("Dragonite trained!");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(1, 100, generator);
 		}
 		System.out.println("Lopunny trained!");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(2, 100, generator);
 		}
 		System.out.println("Blissey trained!");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(3, 100, generator);
 		}
 		System.out.println("Gardevoir trained!");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(4, 100, generator);
 		}
 		System.out.println("Gengar trained!");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(5, 100, generator);
 		}
 		System.out.println("Weavile trained!");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10000; i++) {
 			practice1v1(6, 100, generator);
 		}
 		System.out.println("Diancie trained!");
-		for(int c = 0; c < 100000; c++) {
+		for(int c = 0; c < 1000000; c++) {
 			for(int x = 0; x < 7; x++) {
 				trainAgainstRandom(x, generator);
 			}
@@ -65,17 +65,27 @@ public class NetworkComunication {
 			
 		}
 		System.out.println("Best switches trained");
-		for(int i = 0; i < 1000000; i++) {
-			trainSwitchChoice(generator);
-			
-		}
-		System.out.println("Switching situations trained");
+//		for(int i = 0; i < 1000000; i++) {
+//			trainSwitchChoice(generator);
+//			
+//		}
+//		System.out.println("Switching situations trained");
 		System.out.println("");
 		System.out.println("----------------------------");
 		System.out.println("");
 		arenaInterface.reset();
 		arenaInterface.arena().playerBSwitch(5);
-		fightAgainstPlayer();
+		while (!arenaInterface.gameOver()) {
+			fightAgainstPlayer();
+		}
+		if(arenaInterface.victoriousA()) {
+			System.out.println("You won!");
+			return;
+		}
+		if(arenaInterface.victoriousB()) {
+			System.out.println("You Lost!");
+			return;
+		}
 	}
 	
 	private static void fightAgainstPlayer() throws IOException {
@@ -94,28 +104,22 @@ public class NetworkComunication {
 				playerSwitches();
 			}
 		}
+		
 		if(arenaInterface.gameOver()) {
-			if(arenaInterface.victoriousA()) {
-				System.out.println("You won!");
-				return;
-			}
-			if(arenaInterface.victoriousB()) {
-				System.out.println("You Lost!");
-				return;
-			}
+			return;
 		}
+		
 		if(!arenaInterface.arena().PokemonA().canFight() ) {
 			playerSwitch();
 		}
 		if(!arenaInterface.arena().PokemonB().canFight()) {
 			eUtils e = new eUtils();
-			int[] temp = arenaInterface.arena().avaibleB();
+			int[] temp = arenaInterface.arena().avaibleB().clone();
 			temp[arenaInterface.arena().fightingPokemonB()] = 0;
 			int switchIn = interpretSwitchB(temp, e.fighting(arenaInterface.arena().fightingPokemonB()));
 			arenaInterface.arena().playerBSwitch(switchIn);
 			System.out.println("Enemy's pokemon fainted, " + pokemonByList(switchIn) + " comes in");
 		}
-		fightAgainstPlayer();
 	}
 
 	private static void playerSwitch() throws IOException {
@@ -125,107 +129,110 @@ public class NetworkComunication {
 		String input = bufferedReader.readLine();
 		if(input.equals("0")) {
 			arenaInterface.arena().playerASwitch(0);
-			System.out.println(pokemonByList(0) + "comes in");
+			System.out.println(pokemonByList(0) + " comes in");
 		}
 		if(input.equals("1")) {
 			arenaInterface.arena().playerASwitch(1);
-			System.out.println(pokemonByList(1) + "comes in");
+			System.out.println(pokemonByList(1) + " comes in");
 		}
 		if(input.equals("2")) {
 			arenaInterface.arena().playerASwitch(2);
-			System.out.println(pokemonByList(2) + "comes in");
+			System.out.println(pokemonByList(2) + " comes in");
 		}
 		if(input.equals("3")) {
 			arenaInterface.arena().playerASwitch(3);
-			System.out.println(pokemonByList(3) + "comes in");
+			System.out.println(pokemonByList(3) + " comes in");
 		}
 		if(input.equals("4")) {
 			arenaInterface.arena().playerASwitch(4);
-			System.out.println(pokemonByList(4) + "comes in");
+			System.out.println(pokemonByList(4) + " comes in");
 		}
 		if(input.equals("5")) {
 			arenaInterface.arena().playerASwitch(5);
-			System.out.println(pokemonByList(5) + "comes in");
+			System.out.println(pokemonByList(5) + " comes in");
 		}
 		if(input.equals("6")) {
 			arenaInterface.arena().playerASwitch(6);
-			System.out.println(pokemonByList(6) + "comes in");
+			System.out.println(pokemonByList(6) + " comes in");
 		}
 	}
 
 	private static void playerSwitches() throws IOException {
 		System.out.println("Player's pokemon are:");
 		getPokemon();
-		if(networkSwitches()) {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			String input = bufferedReader.readLine();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		String input = bufferedReader.readLine();
+//		if(networkSwitches()) {
+//			if(input.equals("0")) {
+//				arenaInterface.arena().playerASwitch(0);
+//				System.out.println(pokemonByList(0) + " comes in");
+//			}
+//			if(input.equals("1")) {
+//				arenaInterface.arena().playerASwitch(1);
+//				System.out.println(pokemonByList(1) + " comes in");
+//				arenaInterface.arena().playerASwitch(2);
+//				System.out.println(pokemonByList(2) + " comes in");
+//			}
+//			if(input.equals("3")) {
+//				arenaInterface.arena().playerASwitch(3);
+//				System.out.println(pokemonByList(3) + " comes in");
+//			}
+//			if(input.equals("4")) {
+//				arenaInterface.arena().playerASwitch(4);
+//				System.out.println(pokemonByList(4) + " comes in");
+//			}
+//			if(input.equals("5")) {
+//				arenaInterface.arena().playerASwitch(5);
+//				System.out.println(pokemonByList(5) + " comes in");
+//			}
+//			if(input.equals("6")) {
+//				arenaInterface.arena().playerASwitch(6);
+//				System.out.println(pokemonByList(6) + " comes in");
+//			}
+//		}
+//		else {
 			if(input.equals("0")) {
 				arenaInterface.arena().playerASwitch(0);
-				System.out.println(pokemonByList(0) + "comes in");
+				System.out.println(pokemonByList(0) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
+				arenaInterface.arena().BtoA(getEnemyMove());
 			}
-			if(input.equals("1")) {
+			else if(input.equals("1")) {
 				arenaInterface.arena().playerASwitch(1);
-				System.out.println(pokemonByList(1) + "comes in");
+				System.out.println(pokemonByList(1) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
+				arenaInterface.arena().BtoA(getEnemyMove());
 			}
-			if(input.equals("2")) {
+			else if(input.equals("2")) {
 				arenaInterface.arena().playerASwitch(2);
-				System.out.println(pokemonByList(2) + "comes in");
+				System.out.println(pokemonByList(2) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
+				arenaInterface.arena().BtoA(getEnemyMove());
 			}
 			if(input.equals("3")) {
 				arenaInterface.arena().playerASwitch(3);
-				System.out.println(pokemonByList(3) + "comes in");
+				System.out.println(pokemonByList(3) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
+				arenaInterface.arena().BtoA(getEnemyMove());
 			}
-			if(input.equals("4")) {
+			else if(input.equals("4")) {
 				arenaInterface.arena().playerASwitch(4);
-				System.out.println(pokemonByList(4) + "comes in");
+				System.out.println(pokemonByList(4) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
+				arenaInterface.arena().BtoA(getEnemyMove());
 			}
-			if(input.equals("5")) {
+			else if(input.equals("5")) {
 				arenaInterface.arena().playerASwitch(5);
-				System.out.println(pokemonByList(5) + "comes in");
+				System.out.println(pokemonByList(5) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
+				arenaInterface.arena().BtoA(getEnemyMove());
 			}
-			if(input.equals("6")) {
+			else if(input.equals("6")) {
 				arenaInterface.arena().playerASwitch(6);
-				System.out.println(pokemonByList(6) + "comes in");
-			}
-		}
-		else {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			String input = bufferedReader.readLine();
-			if(input.equals("0")) {
-				arenaInterface.arena().playerASwitch(0);
-				System.out.println(pokemonByList(0) + "comes in");
+				System.out.println(pokemonByList(6) + " comes in");
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
 				arenaInterface.arena().BtoA(getEnemyMove());
-			}
-			if(input.equals("1")) {
-				arenaInterface.arena().playerASwitch(1);
-				System.out.println(pokemonByList(1) + "comes in");
-				arenaInterface.arena().BtoA(getEnemyMove());
-			}
-			if(input.equals("2")) {
-				arenaInterface.arena().playerASwitch(2);
-				System.out.println(pokemonByList(2) + "comes in");
-				arenaInterface.arena().BtoA(getEnemyMove());
-			}
-			if(input.equals("3")) {
-				arenaInterface.arena().playerASwitch(3);
-				System.out.println(pokemonByList(3) + "comes in");
-				arenaInterface.arena().BtoA(getEnemyMove());
-			}
-			if(input.equals("4")) {
-				arenaInterface.arena().playerASwitch(4);
-				System.out.println(pokemonByList(4) + "comes in");
-				arenaInterface.arena().BtoA(getEnemyMove());
-			}
-			if(input.equals("5")) {
-				arenaInterface.arena().playerASwitch(5);
-				System.out.println(pokemonByList(5) + "comes in");
-				arenaInterface.arena().BtoA(getEnemyMove());
-			}
-			if(input.equals("6")) {
-				arenaInterface.arena().playerASwitch(6);
-				System.out.println(pokemonByList(6) + "comes in");
-				arenaInterface.arena().BtoA(getEnemyMove());
-			}
+//			}
 		}
 	}
 
@@ -240,37 +247,39 @@ public class NetworkComunication {
 	private static void playerFights() throws IOException {
 		System.out.println(pokemonByList(arenaInterface.getPokemonNumberA()) + "'s moves are:");
 		getMoves();
-		if(networkSwitches()) {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			String input = bufferedReader.readLine();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		String input = bufferedReader.readLine();
+//		if(networkSwitches()) {
+//			if(input.equals("0")) {
+//				arenaInterface.arena().AtoB(0);
+//			}
+//			if(input.equals("1")) {
+//				arenaInterface.arena().AtoB(1);
+//			}
+//			if(input.equals("2")) {
+//				arenaInterface.arena().AtoB(2);
+//			}
+//			if(input.equals("3")) {
+//				arenaInterface.arena().AtoB(3);
+//			}
+//		}
+//		else {
 			if(input.equals("0")) {
-				arenaInterface.arena().AtoB(0);
-			}
-			if(input.equals("1")) {
-				arenaInterface.arena().AtoB(1);
-			}
-			if(input.equals("2")) {
-				arenaInterface.arena().AtoB(2);
-			}
-			if(input.equals("3")) {
-				arenaInterface.arena().AtoB(3);
-			}
-		}
-		else {
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			String input = bufferedReader.readLine();
-			if(input.equals("0")) {
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
 				arenaInterface.arena().battle(0, getEnemyMove());
 			}
-			if(input.equals("1")) {
+			else if(input.equals("1")) {
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
 				arenaInterface.arena().battle(1, getEnemyMove());
 			}
-			if(input.equals("2")) {
+			else if(input.equals("2")) {
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
 				arenaInterface.arena().battle(2, getEnemyMove());
 			}
-			if(input.equals("3")) {
+			else if(input.equals("3")) {
+				System.out.println("Oponent uses " + nameMove(arenaInterface.getPokemonNumberB(), getEnemyMove()));
 				arenaInterface.arena().battle(3, getEnemyMove());
-			}
+//			}
 		}
 	}
 	
@@ -288,10 +297,11 @@ public class NetworkComunication {
 
 	private static boolean networkSwitches() {
 		eUtils e = new eUtils();
-		int[] temp = arenaInterface.arena().avaibleB();
+		int[] temp = arenaInterface.arena().avaibleB().clone();
 		temp[arenaInterface.arena().fightingPokemonB()] = 0;
 		if(changeChoiceNetwork.feed(e.join(e.fighting(arenaInterface.arena().fightingPokemonB()), temp, e.fighting(arenaInterface.arena().fightingPokemonA()), arenaInterface.getHealthB(), arenaInterface.getHealthA()))[0] < 0.5) {
 			int switchIn = interpretSwitchB(temp, e.fighting(arenaInterface.arena().fightingPokemonB()));
+			System.out.println("Oponent switches " + pokemonByList(arenaInterface.arena().fightingPokemonB()) + " for " + pokemonByList(switchIn));
 			arenaInterface.arena().playerBSwitch(switchIn);
 			return true;
 		}
@@ -488,8 +498,8 @@ public class NetworkComunication {
 	private static int interpretSwitchA(int[] available, int[] fighting) {
 		eUtils e = new eUtils();
 		double[] response = changePokemonNetwork.feed(e.join(available, fighting, arenaInterface.getHealthB()));
-		int temp = 0;
-		double otherTemp = 1/(6);
+		int temp = 10;
+		double otherTemp = 1/(double) 6;
 		for(int i = 0; i < 7; i++) {
 			if(available[i] > 0 && Math.abs(otherTemp*i - response[0]) < Math.abs(otherTemp*temp - response[0])) {
 				temp = i;
@@ -501,8 +511,8 @@ public class NetworkComunication {
 	private static int interpretSwitchB(int[] available, int[] fighting) {
 		eUtils e = new eUtils();
 		double[] response = changePokemonNetwork.feed(e.join(available, fighting, arenaInterface.getHealthA()));
-		int temp = 0;
-		double otherTemp = 1/(6);
+		int temp = 10;
+		double otherTemp = 1/(double) 6;
 		for(int i = 0; i < 7; i++) {
 			if(available[i] > 0 && Math.abs(otherTemp*i - response[0]) < Math.abs(otherTemp*temp - response[0])) {
 				temp = i;
@@ -526,7 +536,7 @@ public class NetworkComunication {
 			}
 		}
 		int[] fighting = new int[] {1, 0, 0, 0, 0, 0, 0};
-		double[] environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		double[] environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		int select = 0;
 		while(!flag) {
 			select = generator.nextInt(7);
@@ -554,7 +564,7 @@ public class NetworkComunication {
 			}
 		}
 		fighting = new int[] {0, 1, 0, 0, 0, 0, 0};
-		environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		while(!flag) {
 			select = generator.nextInt(7);
 			if(arenaInterface.arena().avaibleA()[select] == 1) {
@@ -580,7 +590,7 @@ public class NetworkComunication {
 			}
 		}
 		fighting = new int[] {0, 0, 1, 0, 0, 0, 0};
-		environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		while(!flag) {
 			select = generator.nextInt(7);
 			if(arenaInterface.arena().avaibleA()[select] == 1) {
@@ -606,7 +616,7 @@ public class NetworkComunication {
 			}
 		}
 		fighting = new int[] {0, 0, 0, 1, 0, 0, 0};
-		environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		while(!flag) {
 			select = generator.nextInt(7);
 			if(arenaInterface.arena().avaibleA()[select] == 1) {
@@ -632,7 +642,7 @@ public class NetworkComunication {
 			}
 		}
 		fighting = new int[] {0, 0, 0, 0, 1, 0, 0};
-		environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		while(!flag) {
 			select = generator.nextInt(7);
 			if(arenaInterface.arena().avaibleA()[select] == 1) {
@@ -658,7 +668,7 @@ public class NetworkComunication {
 			}
 		}
 		fighting = new int[] {0, 0, 0, 0, 0, 1, 0};
-		environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		while(!flag) {
 			select = generator.nextInt(7);
 			if(arenaInterface.arena().avaibleA()[select] == 1) {
@@ -683,8 +693,8 @@ public class NetworkComunication {
 				flag = false;
 			}
 		}
-		fighting = new int[] {0, 1, 0, 0, 0, 0, 1};
-		environment = e.join(arenaInterface.arena().avaibleA(), fighting, arenaInterface.getHealthB());
+		fighting = new int[] {0, 0, 0, 0, 0, 0, 1};
+		environment = e.join(arenaInterface.arena().avaibleA().clone(), fighting, arenaInterface.getHealthB());
 		while(!flag) {
 			select = generator.nextInt(7);
 			if(arenaInterface.arena().avaibleA()[select] == 1) {
@@ -725,13 +735,13 @@ public class NetworkComunication {
 		int[] fighting = new int[] {1, 0, 0, 0, 0, 0, 0};
 		int counter = 0;
 		double[] environmentB;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[0].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(0, pokemonBuffNetworks[0].feed(environmentB)[0]);
 			}
 			else {
@@ -748,6 +758,7 @@ public class NetworkComunication {
 				action = new ArrayList<Integer>();
 			}
 		}
+		
 		if(!arenaInterface.arena().PokemonB().canFight()) {
 			for(int v = 0; v < action.size(); v++) {
 				pokemonModeNetworks[i].train(environment.get(v), interpretMode(i, action.get(v)));
@@ -767,13 +778,13 @@ public class NetworkComunication {
 		action = new ArrayList<Integer>();
 		fighting = new int[] {0, 1, 0, 0, 0, 0, 0};
 		counter = 0;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[1].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(1, pokemonBuffNetworks[1].feed(environmentB)[0]);
 			}
 			else {
@@ -809,13 +820,13 @@ public class NetworkComunication {
 		action = new ArrayList<Integer>();
 		fighting = new int[] {0, 0, 1, 0, 0, 0, 0};
 		counter = 0;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[2].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(2, pokemonBuffNetworks[2].feed(environmentB)[0]);
 			}
 			else {
@@ -851,13 +862,13 @@ public class NetworkComunication {
 		action = new ArrayList<Integer>();
 		fighting = new int[] {0, 0, 0, 1, 0, 0, 0};
 		counter = 0;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[3].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(3, pokemonBuffNetworks[3].feed(environmentB)[0]);
 			}
 			else {
@@ -893,13 +904,13 @@ public class NetworkComunication {
 		action = new ArrayList<Integer>();
 		fighting = new int[] {0, 0, 0, 0, 1, 0, 0};
 		counter = 0;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[4].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(4, pokemonBuffNetworks[4].feed(environmentB)[0]);
 			}
 			else {
@@ -935,13 +946,13 @@ public class NetworkComunication {
 		action = new ArrayList<Integer>();
 		fighting = new int[] {0, 0, 0, 0, 0, 1, 0};
 		counter = 0;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[5].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(5, pokemonBuffNetworks[5].feed(environmentB)[0]);
 			}
 			else {
@@ -977,13 +988,13 @@ public class NetworkComunication {
 		action = new ArrayList<Integer>();
 		fighting = new int[] {0, 0, 0, 0, 0, 0, 1};
 		counter = 0;
-		environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 		while(!arenaInterface.arena().PokemonB().canFight() && counter < 10000) {
+			environmentB = e.join(e.fighting(i), arenaInterface.getHealthB(), arenaInterface.getHealthA(), arenaInterface.getTurnB());
 			environment.add(e.join(fighting, arenaInterface.getHealthA(), arenaInterface.getHealthB(), arenaInterface.getTurnA()));
 			int temp1 = generator.nextInt(4);
 			double[] temp2 = pokemonModeNetworks[6].feed(environmentB);
 			int temp3;
-			if(1-temp2[0] < 0.5) {
+			if(temp2[0] < 0.5) {
 				temp3 = reverseInterpretBuff(6, pokemonBuffNetworks[6].feed(environmentB)[0]);
 			}
 			else {
@@ -1013,10 +1024,11 @@ public class NetworkComunication {
 		}
 	}
 
-	private static int reverseInterpretAttack(int i, double d) {
+	private static int reverseInterpretBuff(int i, double d) {
 		if(i == 0) {
 			return 0;
 		}
+		
 		else if(i == 2) {
 			if(d < 0.5) {
 				return 0;
@@ -1024,16 +1036,21 @@ public class NetworkComunication {
 			
 			return 1;
 		}
+		
 		else if(i == 3) {
 			return 3;
 		}
+		
+		else if(i == 4) {
+			return 3;
+		}
+		
 		else{
 			return 0;
 		}
-		
 	}
 
-	private static int reverseInterpretBuff(int i, double d) {
+	private static int reverseInterpretAttack(int i, double d) {
 		if(i == 0) {
 			if(d < 0.25) {
 				return 1;
@@ -1075,16 +1092,15 @@ public class NetworkComunication {
 			}
 		}
 		else if(i == 4) {
-			if(d < (0.33/2)) {
+			if(d < 0.25) {
 				return 0;
 			}
-			else if(d > (0.33/2) && d < 0.5) {
-				return 1;
-			}
-			else if(d > 0.5 && d < (1.67/2)) {
+			else if(d > 0.75) {
 				return 2;
 			}
-			return 3;
+			else {
+				return 1;
+			}
 		}
 		else if(i == 5) {
 			if(d < (0.33/2)) {
@@ -1442,6 +1458,9 @@ public class NetworkComunication {
 			return new double[] {1};
 		}
 		else if(i == 4) {
+			if(integer == 3) {
+				return new double[] {0};
+			}
 			return new double[] {1};
 		}
 		else if(i == 5) {

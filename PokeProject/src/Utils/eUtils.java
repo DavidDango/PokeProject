@@ -76,7 +76,7 @@ public class eUtils {
 	}
 
 	public double transform(int select, int i) {
-		double temp = 1/(i - 1);
+		double temp = 1/(double) (i - 1);
 		return temp*select;
 	}
 
